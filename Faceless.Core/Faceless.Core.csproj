@@ -74,6 +74,8 @@
     <Compile Include="Emulation\Objects\FacelessObject.cs" />
     <Compile Include="Exceptions\CantHandleInstructionException.cs" />
     <Compile Include="FacelessAssembly.cs" />
+    <Compile Include="MSIL\ILInstruction.cs" />
+    <Compile Include="MSIL\ILParser.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
