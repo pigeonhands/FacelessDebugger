@@ -10,16 +10,23 @@ namespace Faceless.Dummy {
         class Test {
             public int int1;
             public string string1;
+
+            public void Add(int i) {
+                int1 += i;
+            }
         }
 
         static void Main(string[] args) {
-
+            
             Console.WriteLine(Reverse("Hello, World!"));
             Console.WriteLine(Fib(0, 1, 10));
 
+    
             var t = new Test();
             t.int1 = 1;
             t.string1 = "string value 1";
+
+            t.Add(1);
             Console.WriteLine(t.int1);
             Console.WriteLine(t.string1);
 

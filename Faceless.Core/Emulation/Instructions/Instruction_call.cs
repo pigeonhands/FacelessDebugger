@@ -19,17 +19,12 @@ namespace Faceless.Core.Emulation.Instructions {
                 .ToArray();
 
             var facelessValues = new FacelessValue[pushValues.Length];
-            int index = 0;
-            if (!m.IsStatic) {
-                facelessValues[index] = new FacelessValue(pushValues[index], m.DeclaringType.ToTypeSig());
-                index++;
-            }
-
-            for (int pindex = 0; pindex < m.Parameters.Count; pindex++, index++) {
+            
+            for (int index = 0; index < m.Parameters.Count; index++) {
                 if(pushValues[index] is FacelessValue) {
                     facelessValues[index] = (FacelessValue)pushValues[index];
                 } else {
-                    facelessValues[index] = new FacelessValue(pushValues[index], m.Parameters[pindex].Type);
+                    facelessValues[index] = new FacelessValue(pushValues[index], m.Parameters[index].Type);
                 }
                 
             }
