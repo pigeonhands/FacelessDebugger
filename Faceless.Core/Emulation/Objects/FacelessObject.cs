@@ -14,10 +14,15 @@ namespace Faceless.Core.Emulation.Objects {
         private FacelessValue[] Fields;
         public FacelessObject(TypeDef _type) {
             TargetType = _type;
+            Name = TargetType.Name;
             Fields = new FacelessValue[TargetType?.Fields.Count ?? 0];
         }
 
+        public void SetField(uint id, FacelessValue fv) {
+            Fields[id - 1] = fv;
+        }
 
+        public FacelessValue GetField(uint id) => Fields[id - 1];
 
     }
 }

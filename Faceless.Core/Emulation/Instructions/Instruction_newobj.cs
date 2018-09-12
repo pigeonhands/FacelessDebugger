@@ -12,11 +12,29 @@ namespace Faceless.Core.Emulation.Instructions {
         public Instruction_newobj() : base(Code.Newobj) {
         }
         public override void Execute(Instruction i, Emulator emulator) {
-            MemberRef mr = (MemberRef)i.Operand;
-            Type t = Type.GetType(mr.GetDeclaringTypeFullName());
+            IMethodDefOrRef mr = (IMethodDefOrRef)i.Operand;
+            var typename = mr.DeclaringType.ReflectionFullName;
 
             object[] args = emulator.MemoryStack.CurrentFrame.Pop(mr.MethodSig.Params.Count).Reverse().ToArray();
-            emulator.MemoryStack.CurrentFrame.Push(new FacelessValue(Activator.CreateInstance(t, args), mr.DeclaringType.ToTypeSig()));
+
+            object instance = null;
+
+            if(mr is MethodDef) {
+                // Internal type.
+
+                var asm = (AssemblyDef)mr.DeclaringType.DefinitionAssembly;
+                if (!asm.TypeExistsReflection(typename)) {
+                    throw new InvalidOperationException($"Type does not exist. ({typename}).");
+                }
+
+                instance = new FacelessObject(asm.Find(typename, true));
+            } else {
+                Type t = Type.GetType(typename, true);
+                instance = Activator.CreateInstance(t, args);
+            }
+
+            
+            emulator.MemoryStack.CurrentFrame.Push(new FacelessValue(instance, mr.DeclaringType.ToTypeSig()));
         }
     }
 }

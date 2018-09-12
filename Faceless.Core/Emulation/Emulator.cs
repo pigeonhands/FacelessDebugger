@@ -15,8 +15,8 @@ namespace Faceless.Core.Emulation {
 
         public bool CanEmulate => CurrentCall != null && !CurrentCall.EndOfMethod;
 
-        public event OnCallDelegate OnInternalCall;
-        public event OnCallDelegate OnExternalCall;
+        public event OnInternalCallDelegate OnInternalCall;
+        public event OnExternalCallDelegate OnExternalCall;
         
         internal EmulatedCall CurrentCall { get; set; }
         internal FacelessStack MemoryStack { get; } = new FacelessStack();
@@ -56,6 +56,8 @@ namespace Faceless.Core.Emulation {
                 new Instruction_starg(),
                 new Instruction_ceq(),
                 new Instruction_brfalse(),
+                new Instruction_stfld(),
+                new Instruction_ldfld(),
 
             });
 
@@ -68,12 +70,12 @@ namespace Faceless.Core.Emulation {
             }
         }
 
-        public bool ShouldCall(IMethodDefOrRef method, object[] args, bool externalCall) {
-            if (externalCall) {
-                return OnExternalCall?.Invoke(null, method, args) ?? true;
-            } else {
-                return OnInternalCall?.Invoke(null, method, args) ?? true;
-            }
+        public bool ShouldCallExternal(IMethodDefOrRef method, object[] args) {
+            return OnExternalCall?.Invoke(null, method, args) ?? true;
+        }
+
+        public bool ShouldCallInternal (IMethodDefOrRef method, FacelessValue[] args) {
+            return OnInternalCall?.Invoke(null, method, args) ?? true;
         }
 
         public Instruction NextInstruction() => CurrentCall.NextInstruction();

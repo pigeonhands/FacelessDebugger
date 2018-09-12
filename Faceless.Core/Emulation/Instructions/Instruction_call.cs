@@ -18,10 +18,6 @@ namespace Faceless.Core.Emulation.Instructions {
                 .Reverse()
                 .ToArray();
 
-            if (!emulator.ShouldCall(m, pushValues, false)) {
-                emulator.MemoryStack.CurrentFrame.Push(null);
-            }
-
             var facelessValues = new FacelessValue[pushValues.Length];
             int index = 0;
             if (!m.IsStatic) {
@@ -38,7 +34,9 @@ namespace Faceless.Core.Emulation.Instructions {
                 
             }
 
-            
+            if (!emulator.ShouldCallInternal(m, facelessValues)) {
+                emulator.MemoryStack.CurrentFrame.Push(null);
+            }
 
             var call = new EmulatedCall(emulator.CurrentCall, m, facelessValues);
             emulator.MemoryStack.NewFrame();
@@ -53,7 +51,7 @@ namespace Faceless.Core.Emulation.Instructions {
                 .Reverse()
                 .ToArray();
 
-            if (!emulator.ShouldCall(m, par, true)) {
+            if (!emulator.ShouldCallExternal(m, par)) {
                 emulator.MemoryStack.CurrentFrame.Push(null);
             }
 

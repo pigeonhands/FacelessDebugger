@@ -18,7 +18,7 @@ namespace Faceless.Core.Emulation.Objects {
         }
 
         public override string ToString() {
-            return $"FacelessValue ({Value})";
+            return $"FacelessValue[{CilType}] ({Value})";
         }
 
     }

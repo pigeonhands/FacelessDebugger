@@ -6,11 +6,23 @@ using System.Threading.Tasks;
 
 namespace Faceless.Dummy {
     class Program {
+
+        class Test {
+            public int int1;
+            public string string1;
+        }
+
         static void Main(string[] args) {
 
             Console.WriteLine(Reverse("Hello, World!"));
             Console.WriteLine(Fib(0, 1, 10));
-            
+
+            var t = new Test();
+            t.int1 = 1;
+            t.string1 = "string value 1";
+            Console.WriteLine(t.int1);
+            Console.WriteLine(t.string1);
+
         }
         static string Reverse(string s) {
             var sb = new StringBuilder();

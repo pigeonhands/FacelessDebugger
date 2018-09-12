@@ -1,5 +1,6 @@
 ﻿using dnlib.DotNet;
 using Faceless.Core;
+using Faceless.Core.Emulation.Objects;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -60,7 +61,7 @@ namespace FacelessSandbox.Forms {
             }
         }
 
-        private bool Fasm_OnInternalCall(FacelessAssembly sender, IMethodDefOrRef method, object[] args) {
+        private bool Fasm_OnInternalCall(FacelessAssembly sender, IMethodDefOrRef method, FacelessValue[] args) {
             var newNode = new TreeNode(method.FullName);
             
             var argsNode = new TreeNode("args");

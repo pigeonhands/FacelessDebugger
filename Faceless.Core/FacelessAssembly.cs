@@ -8,11 +8,14 @@ using dnlib.DotNet;
 using System.IO;
 using dnlib.DotNet.Emit;
 using Faceless.Core.Emulation;
+using Faceless.Core.Emulation.Objects;
 
 namespace Faceless.Core {
     public delegate bool OnInstructionDelegate(FacelessAssembly sender, Instruction instruction);
     public delegate void OnExceptionDelegate(FacelessAssembly sender, Exception ex);
-    public delegate bool OnCallDelegate(FacelessAssembly sender, IMethodDefOrRef method, object[] args);
+    public delegate bool OnInternalCallDelegate(FacelessAssembly sender, IMethodDefOrRef method, FacelessValue[] args);
+    public delegate bool OnExternalCallDelegate(FacelessAssembly sender, IMethodDefOrRef method, object[] args);
+
     public class FacelessAssembly {
 
         #region " Static creators "
@@ -31,9 +34,9 @@ namespace Faceless.Core {
         public event OnExceptionDelegate OnException;
 
 
-        public event OnCallDelegate OnInternalCall;
+        public event OnInternalCallDelegate OnInternalCall;
 
-        public event OnCallDelegate OnExternalCall;
+        public event OnExternalCallDelegate OnExternalCall;
 
         #endregion
 
@@ -48,7 +51,7 @@ namespace Faceless.Core {
             Emulator.OnInternalCall += Emulator_OnInternalCall;
         }
 
-        private bool Emulator_OnInternalCall(FacelessAssembly sender, IMethodDefOrRef method, object[] args) {
+        private bool Emulator_OnInternalCall(FacelessAssembly sender, IMethodDefOrRef method, FacelessValue[] args) {
             return OnInternalCall?.Invoke(this, method, args) ?? true;
         }
 
