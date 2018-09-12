@@ -8,27 +8,31 @@ namespace Faceless.Dummy {
     class Program {
 
         class Test {
-            public int int1;
+            public int Int1 { get; private set; }
             public string string1;
 
+            public Test() {
+                Int1 = 10;
+            }
+
             public void Add(int i) {
-                int1 += i;
+                Int1 += i;
             }
         }
 
         static void Main(string[] args) {
-            
+
             Console.WriteLine(Reverse("Hello, World!"));
             Console.WriteLine(Fib(0, 1, 10));
 
     
             var t = new Test();
-            t.int1 = 1;
             t.string1 = "string value 1";
 
             t.Add(1);
-            Console.WriteLine(t.int1);
+            Console.WriteLine(t.Int1);
             Console.WriteLine(t.string1);
+            
 
         }
         static string Reverse(string s) {

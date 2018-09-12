@@ -11,7 +11,7 @@ namespace Faceless.Core.Emulation.Instructions {
         public Instruction_call(Code c) : base(c) {
         }
 
-        private void EmulateCall(MethodDef m, Emulator emulator) {
+        public static void EmulateCall(MethodDef m, Emulator emulator) {
             object[] pushValues = emulator
                 .MemoryStack.CurrentFrame
                 .Pop(m.Parameters.Count)
@@ -48,6 +48,7 @@ namespace Faceless.Core.Emulation.Instructions {
 
             if (!emulator.ShouldCallExternal(m, par)) {
                 emulator.MemoryStack.CurrentFrame.Push(null);
+                return;
             }
 
             Type declaringType = Type.GetType(m.GetDeclaringTypeFullName());
@@ -58,16 +59,21 @@ namespace Faceless.Core.Emulation.Instructions {
                 inst = fv.Value;
             }
 
-            MethodInfo mi = declaringType.GetMethods().First(x => string.Equals(MethodInfoToSig(x), m.FullName)); //aids but works
 
-            
 
-            object ret = mi.Invoke(inst, par);
-            if (m.ReturnType != m.Module.CorLibTypes.Void) {
-                emulator.MemoryStack.CurrentFrame.Push(ret);
+            if (m.Name.Equals(".ctor")) {
+
+                declaringType.GetConstructor(new Type[0]).Invoke(par);
+
+            } else {
+
+                MethodInfo mi = declaringType.GetMethods().First(x => string.Equals(MethodInfoToSig(x), m.FullName)); //aids but works
+                object ret = mi.Invoke(inst, par);
+                if (m.ReturnType != m.Module.CorLibTypes.Void) {
+                    emulator.MemoryStack.CurrentFrame.Push(ret);
+                }
+
             }
-
-
         }
 
         private string MethodInfoToSig(MethodInfo mi) {

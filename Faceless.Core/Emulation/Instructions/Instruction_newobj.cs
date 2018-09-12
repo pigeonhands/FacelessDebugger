@@ -26,15 +26,23 @@ namespace Faceless.Core.Emulation.Instructions {
                 if (!asm.TypeExistsReflection(typename)) {
                     throw new InvalidOperationException($"Type does not exist. ({typename}).");
                 }
+                TypeDef type = asm.Find(typename, true);
+                instance = new FacelessObject(type);
 
-                instance = new FacelessObject(asm.Find(typename, true));
+                emulator.MemoryStack.CurrentFrame.Push(new FacelessValue(instance, mr.DeclaringType.ToTypeSig())); // newobj instance
+
+                emulator.MemoryStack.CurrentFrame.Push(instance); //.ctor call
+
+                Instruction_call.EmulateCall(type.FindDefaultConstructor(), emulator);
             } else {
                 Type t = Type.GetType(typename, true);
                 instance = Activator.CreateInstance(t, args);
+
+                emulator.MemoryStack.CurrentFrame.Push(new FacelessValue(instance, mr.DeclaringType.ToTypeSig()));
             }
 
             
-            emulator.MemoryStack.CurrentFrame.Push(new FacelessValue(instance, mr.DeclaringType.ToTypeSig()));
+            
         }
     }
 }

@@ -27,7 +27,8 @@ namespace Faceless.Core.Emulation.Instructions {
             object pushValue = null;
 
             if (obj.Value is FacelessObject) {
-                pushValue = ((FacelessObject)obj.Value).GetField(field.Rid).Value;
+                var f = ((FacelessObject)obj.Value).GetField(field.Rid);
+                pushValue = f.Value;
             } else {
                  //TODO
             }

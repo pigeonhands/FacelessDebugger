@@ -65,6 +65,8 @@ namespace Faceless.Core {
             }
             var nextInstruction = Emulator.NextInstruction();
             if(OnInstruction?.Invoke(this, nextInstruction) ?? true) {
+                Emulator.RunInstruction(nextInstruction);
+                return;
                 try {
                     Emulator.RunInstruction(nextInstruction);
                 }catch(Exception ex) {
