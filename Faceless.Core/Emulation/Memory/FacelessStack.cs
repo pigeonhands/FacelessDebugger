@@ -5,15 +5,16 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace Faceless.Core.Emulation.Memory {
-    class FacelessStack : Stack<StackFrame> {
+    class FacelessStack {
 
         public StackFrame CurrentFrame { get; private set; }
 
-
+        private Stack<StackFrame> frames = new Stack<StackFrame>();
+        
 
         public void NewFrame() {
             if(CurrentFrame != null) {
-                this.Push(CurrentFrame);
+                frames.Push(CurrentFrame);
             }
             CurrentFrame = new StackFrame();
         }
@@ -23,13 +24,13 @@ namespace Faceless.Core.Emulation.Memory {
             foreach(object o in CurrentFrame.Pop(ammount)) {
                 newFrame.Push(ammount);
             }
-            this.Push(CurrentFrame);
+            frames.Push(CurrentFrame);
             CurrentFrame = newFrame;
         }
 
         public void PreviousFrame() {
-            if(this.Count > 0) {
-                CurrentFrame = this.Pop();
+            if(frames.Count > 0) {
+                CurrentFrame = frames.Pop();
             } else {
                 CurrentFrame = new StackFrame();
             }
