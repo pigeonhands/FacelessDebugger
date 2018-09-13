@@ -63,8 +63,6 @@ namespace Faceless.Core.Emulation.Instructions {
                 return;
             }
 
-            Type declaringType = Type.GetType(typename);
-
             object inst = null;
             if (m.HasThis) {
                  FacelessValue fv = (FacelessValue)emulator.MemoryStack.CurrentFrame.Pop();

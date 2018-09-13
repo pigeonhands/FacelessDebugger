@@ -64,6 +64,7 @@ namespace Faceless.Core.Emulation {
                 new Instruction_brfalse(),
                 new Instruction_stfld(),
                 new Instruction_ldfld(),
+                new Instruction_ldftn(),
 
             });
 

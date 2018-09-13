@@ -58,6 +58,7 @@
     <Compile Include="Emulation\Instructions\Instruction_ld.cs" />
     <Compile Include="Emulation\Instructions\Instruction_ldarg.cs" />
     <Compile Include="Emulation\Instructions\Instruction_ldfld.cs" />
+    <Compile Include="Emulation\Instructions\Instruction_ldftn.cs" />
     <Compile Include="Emulation\Instructions\Instruction_ldloc.cs" />
     <Compile Include="Emulation\Instructions\Instruction_ldnull.cs" />
     <Compile Include="Emulation\Instructions\Instruction_mul.cs" />
