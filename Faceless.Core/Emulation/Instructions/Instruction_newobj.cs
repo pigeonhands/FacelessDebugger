@@ -35,7 +35,7 @@ namespace Faceless.Core.Emulation.Instructions {
 
                 Instruction_call.EmulateCall(type.FindDefaultConstructor(), emulator);
             } else {
-                Type t = Type.GetType(typename, true);
+                Type t = emulator.ResolveReflectiveType(mr.DeclaringType); //Type.GetType(typename, true);
                 instance = Activator.CreateInstance(t, args);
 
                 emulator.MemoryStack.CurrentFrame.Push(new FacelessValue(instance, mr.DeclaringType.ToTypeSig()));

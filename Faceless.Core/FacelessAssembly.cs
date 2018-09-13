@@ -15,6 +15,7 @@ namespace Faceless.Core {
     public delegate void OnExceptionDelegate(FacelessAssembly sender, Exception ex);
     public delegate bool OnInternalCallDelegate(FacelessAssembly sender, IMethodDefOrRef method, FacelessValue[] args);
     public delegate bool OnExternalCallDelegate(FacelessAssembly sender, IMethodDefOrRef method, object[] args);
+    public delegate bool OnLoadExternalAssemblyDelegate(FacelessAssembly sender, IAssembly assemblyToLoad);
 
     public class FacelessAssembly {
 
@@ -35,8 +36,8 @@ namespace Faceless.Core {
 
 
         public event OnInternalCallDelegate OnInternalCall;
-
         public event OnExternalCallDelegate OnExternalCall;
+        public event OnLoadExternalAssemblyDelegate OnExternalAssemblyLoad;
 
         #endregion
 
@@ -49,6 +50,11 @@ namespace Faceless.Core {
             Emulator = new Emulator(_startingMethodBody);
             Emulator.OnExternalCall += Emulator_OnExternalCall;
             Emulator.OnInternalCall += Emulator_OnInternalCall;
+            Emulator.OnExternalAssemblyLoad += Emulator_OnExternalAssemblyLoad;
+        }
+
+        private bool Emulator_OnExternalAssemblyLoad(FacelessAssembly sender, IAssembly assemblyToLoad) {
+            return OnExternalAssemblyLoad?.Invoke(this, assemblyToLoad) ?? true;
         }
 
         private bool Emulator_OnInternalCall(FacelessAssembly sender, IMethodDefOrRef method, FacelessValue[] args) {
@@ -65,8 +71,6 @@ namespace Faceless.Core {
             }
             var nextInstruction = Emulator.NextInstruction();
             if(OnInstruction?.Invoke(this, nextInstruction) ?? true) {
-                Emulator.RunInstruction(nextInstruction);
-                return;
                 try {
                     Emulator.RunInstruction(nextInstruction);
                 }catch(Exception ex) {
@@ -74,8 +78,6 @@ namespace Faceless.Core {
                 }
             }
         }
-
-
 
     }
 }

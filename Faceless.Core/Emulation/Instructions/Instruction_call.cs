@@ -3,11 +3,19 @@ using dnlib.DotNet.Emit;
 using Faceless.Core.Emulation.Objects;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
 namespace Faceless.Core.Emulation.Instructions {
     internal class Instruction_call : FacelessInstruction {
+
+        private string[] SkipCalls = new string[] {
+                    "System.Void System.Windows.Forms.Application::SetCompatibleTextRenderingDefault(System.Boolean)"
+
+        };
+
         public Instruction_call(Code c) : base(c) {
         }
 
@@ -46,12 +54,16 @@ namespace Faceless.Core.Emulation.Instructions {
                 .Reverse()
                 .ToArray();
 
+            if (SkipCalls.Contains(m.FullName)) {
+                return;
+            }
+
             if (!emulator.ShouldCallExternal(m, par)) {
                 emulator.MemoryStack.CurrentFrame.Push(null);
                 return;
             }
 
-            Type declaringType = Type.GetType(m.GetDeclaringTypeFullName());
+            Type declaringType = Type.GetType(typename);
 
             object inst = null;
             if (m.HasThis) {
@@ -59,20 +71,19 @@ namespace Faceless.Core.Emulation.Instructions {
                 inst = fv.Value;
             }
 
+            Type t = emulator.ResolveReflectiveType(m.DeclaringType);
 
+            Type[] callParamTypes = m.MethodSig.Params.Select(x => emulator.ResolveReflectiveType(x.ToTypeDefOrRef())).ToArray();
+            MethodInfo mi = t.GetMethod(m.Name, callParamTypes);
 
-            if (m.Name.Equals(".ctor")) {
-
-                declaringType.GetConstructor(new Type[0]).Invoke(par);
-
-            } else {
-
-                MethodInfo mi = declaringType.GetMethods().First(x => string.Equals(MethodInfoToSig(x), m.FullName)); //aids but works
-                object ret = mi.Invoke(inst, par);
-                if (m.ReturnType != m.Module.CorLibTypes.Void) {
-                    emulator.MemoryStack.CurrentFrame.Push(ret);
-                }
-
+            object ret = null;
+            if(mi != null) {
+                ret = mi.Invoke(inst, par.Select((x, i) =>
+                    callParamTypes[i] == typeof(bool) && !(x is bool)? (int)x != 0 : x).ToArray()); // 0 == False for boolean calling parameters
+            }
+            
+            if (m.ReturnType != m.Module.CorLibTypes.Void) {
+                emulator.MemoryStack.CurrentFrame.Push(ret);
             }
         }
 

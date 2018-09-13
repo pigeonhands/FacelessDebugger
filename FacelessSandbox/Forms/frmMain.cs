@@ -27,6 +27,8 @@ namespace FacelessSandbox.Forms {
                 if(ofd.ShowDialog() == DialogResult.OK) {
                     fasm = FacelessAssembly.Create(ofd.FileName);
                     tvCallStack.Nodes.Clear();
+                    lbLoadedAssemblies.Items.Clear();
+
                     currentNode = new TreeNode(fasm.CurrentMethodName) {
                         ForeColor = Color.DarkMagenta
                     };
@@ -36,11 +38,18 @@ namespace FacelessSandbox.Forms {
                     fasm.OnException += Fasm_OnException;
                     fasm.OnExternalCall += Fasm_OnExternalCall;
                     fasm.OnInternalCall += Fasm_OnInternalCall;
+                    fasm.OnExternalAssemblyLoad += Fasm_OnExternalAssemblyLoad;
 
                     Run();
                 }
             }
         }
+
+        private bool Fasm_OnExternalAssemblyLoad(FacelessAssembly sender, IAssembly assemblyToLoad) {
+            lbLoadedAssemblies.Items.Add(assemblyToLoad.FullName);
+            return true;
+        }
+
 
         private void Run() {
             btnContinue.Enabled = false;
@@ -48,6 +57,12 @@ namespace FacelessSandbox.Forms {
                 fasm.RunNextInstruction();
             }
         }
+
+        private void Stop() {
+            running = false;
+            btnContinue.Enabled = true;
+        }
+
         private void btnContinue_Click(object sender, EventArgs e) {
             running = true;
             Run();
@@ -92,8 +107,7 @@ namespace FacelessSandbox.Forms {
                         }
                     }
                 }
-                running = false;
-                btnContinue.Enabled = true;
+                Stop();
             }
 
             var argsNode = new TreeNode("args");
@@ -114,6 +128,7 @@ namespace FacelessSandbox.Forms {
             Console.WriteLine("[{0}]: {1}", ex.GetType().Name, ex.Message);
             Console.WriteLine(ex.ToString());
             Console.ResetColor();
+            Stop();
         }
 
         private bool Fasm_OnInstruction(FacelessAssembly sender, dnlib.DotNet.Emit.Instruction instruction) {

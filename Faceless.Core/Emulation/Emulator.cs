@@ -17,15 +17,21 @@ namespace Faceless.Core.Emulation {
 
         public event OnInternalCallDelegate OnInternalCall;
         public event OnExternalCallDelegate OnExternalCall;
-        
+        public event OnLoadExternalAssemblyDelegate OnExternalAssemblyLoad;
+
         internal EmulatedCall CurrentCall { get; set; }
         internal FacelessStack MemoryStack { get; } = new FacelessStack();
 
         private Dictionary<Code, FacelessInstruction> InstructionSet = new Dictionary<Code, FacelessInstruction>();
 
+        private AppDomain sandboxDomain;
+
         public Emulator(MethodDef method) {
             CurrentCall = new EmulatedCall(null, method);
             MemoryStack.NewFrame();
+
+            sandboxDomain = AppDomain.CreateDomain("sandboxDomain");
+
 
             #region Instructions #
 
@@ -91,6 +97,23 @@ namespace Faceless.Core.Emulation {
 
             fi.Execute(ins, this);
 
+        }
+
+        public Type ResolveReflectiveType(ITypeDefOrRef type) {
+            var loadedAssemblies = sandboxDomain
+                   .GetAssemblies();
+            var asm = loadedAssemblies
+                .FirstOrDefault(x => x.FullName == type.DefinitionAssembly.FullName);
+
+            if(asm == null) {
+                /* Load assembly */
+                if(!OnExternalAssemblyLoad?.Invoke(null, type.DefinitionAssembly) ?? true) {
+                    return null;
+                }
+                asm = sandboxDomain.Load(type.DefinitionAssembly.FullName);
+            }
+
+            return asm.GetType(type.ReflectionFullName); ;
         }
 
     }
