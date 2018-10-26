@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Debug\OpCodeDebugger.cs" />
     <Compile Include="Emulation\EmulatedCall.cs" />
     <Compile Include="Emulation\Emulator.cs" />
     <Compile Include="Emulation\Instructions\FacelessInstruction.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="Emulation\Instructions\Instruction_ldftn.cs" />
     <Compile Include="Emulation\Instructions\Instruction_ldloc.cs" />
     <Compile Include="Emulation\Instructions\Instruction_ldnull.cs" />
+    <Compile Include="Emulation\Instructions\Instruction_ldtoken.cs" />
     <Compile Include="Emulation\Instructions\Instruction_mul.cs" />
     <Compile Include="Emulation\Instructions\Instruction_newobj.cs" />
     <Compile Include="Emulation\Instructions\Instruction_nop.cs" />

@@ -14,7 +14,7 @@ namespace Faceless.Core.Emulation.Instructions {
         public Instruction_ldftn() : base(dnlib.DotNet.Emit.Code.Ldftn) {
         }
 
-        public override void Execute(Instruction i, Emulator emulator) {
+        protected override void Handle(Instruction i, Emulator emulator) {
             throw new NotImplementedException("ldftn instruction currently does not work. Thinking for a way to emulate callbacks.");
 
             var m = (MethodDef)i.Operand;

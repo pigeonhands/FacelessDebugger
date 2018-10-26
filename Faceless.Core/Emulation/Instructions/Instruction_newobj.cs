@@ -6,12 +6,14 @@ using System.Threading.Tasks;
 using dnlib.DotNet.Emit;
 using dnlib.DotNet;
 using Faceless.Core.Emulation.Objects;
+using System.Diagnostics;
 
 namespace Faceless.Core.Emulation.Instructions {
     internal class Instruction_newobj : FacelessInstruction {
         public Instruction_newobj() : base(Code.Newobj) {
         }
-        public override void Execute(Instruction i, Emulator emulator) {
+        protected override void Handle(Instruction i, Emulator emulator) {
+
             IMethodDefOrRef mr = (IMethodDefOrRef)i.Operand;
             var typename = mr.DeclaringType.ReflectionFullName;
 

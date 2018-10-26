@@ -10,7 +10,7 @@ namespace Faceless.Core.Emulation.Instructions {
     internal class Instruction_ldnull : FacelessInstruction {
         public Instruction_ldnull() : base(Code.Ldnull) {
         }
-        public override void Execute(Instruction i, Emulator emulator) {
+        protected override void Handle(Instruction i, Emulator emulator) {
             emulator.MemoryStack.CurrentFrame.Push(null);
         }
     }

@@ -10,7 +10,7 @@ namespace Faceless.Core.Emulation.Instructions {
         public Instruction_br() : base(Code.Br) {
         }
 
-        public override void Execute(Instruction i, Emulator emulator) {
+        protected override void Handle(Instruction i, Emulator emulator) {
             var targetInstruction = (Instruction)i.Operand;
             emulator.CurrentCall.GotoInstruction(targetInstruction);
         }

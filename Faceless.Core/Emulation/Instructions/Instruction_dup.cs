@@ -9,7 +9,7 @@ namespace Faceless.Core.Emulation.Instructions {
     internal class Instruction_dup : FacelessInstruction {
         public Instruction_dup() : base(Code.Dup) {
         }
-        public override void Execute(Instruction i, Emulator emulator) {
+        protected override void Handle(Instruction i, Emulator emulator) {
             var val = emulator.MemoryStack.CurrentFrame.Pop();
             emulator.MemoryStack.CurrentFrame.Push(val);
             emulator.MemoryStack.CurrentFrame.Push(val);

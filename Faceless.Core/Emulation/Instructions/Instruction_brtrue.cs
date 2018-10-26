@@ -9,7 +9,7 @@ namespace Faceless.Core.Emulation.Instructions {
     internal class Instruction_brtrue : FacelessInstruction {
         public Instruction_brtrue() : base(Code.Brtrue) {
         }
-        public override void Execute(Instruction i, Emulator emulator) {
+        protected override void Handle(Instruction i, Emulator emulator) {
             long cond = Convert.ToInt64(emulator.MemoryStack.CurrentFrame.Pop());
             if(cond != 0) {
                 emulator.CurrentCall.GotoInstruction((Instruction)i.Operand);

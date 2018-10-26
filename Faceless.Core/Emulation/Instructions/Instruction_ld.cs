@@ -9,7 +9,7 @@ namespace Faceless.Core.Emulation.Instructions {
     internal class Instruction_ld : FacelessInstruction {
         public Instruction_ld(Code _ldcCode) : base(_ldcCode) {
         }
-        public override void Execute(Instruction i, Emulator emulator) {
+        protected override void Handle(Instruction i, Emulator emulator) {
             emulator.MemoryStack.CurrentFrame.Push(i.Operand);
         }
     }

@@ -9,7 +9,7 @@ namespace Faceless.Core.Emulation.Instructions {
     internal class Instruction_pop : FacelessInstruction {
         public Instruction_pop() : base(Code.Pop) {
         }
-        public override void Execute(Instruction i, Emulator emulator) {
+        protected override void Handle(Instruction i, Emulator emulator) {
             emulator.MemoryStack.CurrentFrame.Pop();
         }
     }

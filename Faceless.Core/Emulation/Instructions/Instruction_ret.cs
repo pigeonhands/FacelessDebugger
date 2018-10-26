@@ -10,7 +10,7 @@ namespace Faceless.Core.Emulation.Instructions {
         public Instruction_ret() : base(dnlib.DotNet.Emit.Code.Ret) {
         }
 
-        public override void Execute(Instruction i, Emulator emulator) {
+        protected override void Handle(Instruction i, Emulator emulator) {
             if (emulator.CurrentCall.MethodDefinition.HasReturnType) {
                 object ret = emulator.MemoryStack.CurrentFrame.Pop();
                 emulator.MemoryStack.PreviousFrame();

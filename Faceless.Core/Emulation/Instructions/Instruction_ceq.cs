@@ -10,7 +10,7 @@ namespace Faceless.Core.Emulation.Instructions {
     internal class Instruction_ceq : FacelessInstruction {
         public Instruction_ceq() : base(Code.Ceq) {
         }
-        public override void Execute(Instruction i, Emulator emulator) {
+        protected override void Handle(Instruction i, Emulator emulator) {
             dynamic[] nums = GetStackValues(2, emulator);
             emulator.MemoryStack.CurrentFrame.Push(nums[1] == nums[0] ? 1 : 0);
         }

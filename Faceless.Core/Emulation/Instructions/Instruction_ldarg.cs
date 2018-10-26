@@ -10,7 +10,7 @@ namespace Faceless.Core.Emulation.Instructions {
     internal class Instruction_ldarg : FacelessInstruction {
         public Instruction_ldarg() : base(Code.Ldarg) {
         }
-        public override void Execute(Instruction i, Emulator emulator) {
+        protected override void Handle(Instruction i, Emulator emulator) {
             Parameter p = (Parameter)i.Operand;
             emulator.MemoryStack.CurrentFrame.Push(emulator.CurrentCall.Parameters[p.Index]);
         }

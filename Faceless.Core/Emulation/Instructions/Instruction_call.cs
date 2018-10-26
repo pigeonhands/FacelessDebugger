@@ -94,7 +94,7 @@ namespace Faceless.Core.Emulation.Instructions {
             return sig;
         }
 
-        public override void Execute(Instruction i, Emulator emulator) {
+        protected override void Handle(Instruction i, Emulator emulator) {
             HandleMethodCalling(i.Operand, emulator);
         }
 

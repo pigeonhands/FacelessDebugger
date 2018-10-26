@@ -10,7 +10,7 @@ namespace Faceless.Core.Emulation.Instructions {
     internal class Instruction_xor : FacelessInstruction {
         public Instruction_xor() : base(Code.Xor) {
         }
-        public override void Execute(Instruction i, Emulator emulator) {
+        protected override void Handle(Instruction i, Emulator emulator) {
             dynamic[] nums = GetStackValues(2, emulator);
 
             emulator.MemoryStack.CurrentFrame.Push(nums[1] ^ nums[0]);

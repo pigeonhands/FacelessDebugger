@@ -1,7 +1,9 @@
 ﻿using dnlib.DotNet.Emit;
+using Faceless.Core.Debug;
 using Faceless.Core.Emulation.Objects;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,7 +15,14 @@ namespace Faceless.Core.Emulation.Instructions {
         public FacelessInstruction(Code _code) {
             InstructionCode = _code;
         }
-        public abstract void Execute(Instruction i, Emulator emulator);
+
+        public void Process(Instruction i, Emulator emulator) {
+            if (OpCodeDebugger.Instance.ShouldBreakpoint(InstructionCode)) {
+                Debugger.Break();
+            }
+            Handle(i, emulator);
+        }
+        protected abstract void Handle(Instruction i, Emulator emulator);
 
         protected dynamic[] GetStackValues(int i, Emulator emulator) {
             return emulator.MemoryStack

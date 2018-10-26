@@ -14,7 +14,7 @@ namespace Faceless.Core.Emulation.Instructions {
 
         }
 
-        public override void Execute(Instruction i, Emulator emulator) {
+        protected override void Handle(Instruction i, Emulator emulator) {
 
             if (!(i.Operand is FieldDef)) {
                 throw new NotImplementedException("Internal types only currently.");

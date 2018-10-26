@@ -11,7 +11,7 @@ namespace Faceless.Core.Emulation.Instructions {
         public Instruction_add() : base(dnlib.DotNet.Emit.Code.Add) {
         }
 
-        public override void Execute(Instruction i, Emulator emulator) {
+        protected override void Handle(Instruction i, Emulator emulator) {
             dynamic[] nums = GetStackValues(2, emulator);
             
             emulator.MemoryStack.CurrentFrame.Push(nums[1] + nums[0]);

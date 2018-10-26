@@ -9,7 +9,7 @@ namespace Faceless.Core.Emulation.Instructions {
     internal class Instruction_stloc : FacelessInstruction {
         public Instruction_stloc() : base(Code.Stloc) {
         }
-        public override void Execute(Instruction i, Emulator emulator) {
+        protected override void Handle(Instruction i, Emulator emulator) {
             Local l = (Local)i.Operand;
             emulator.CurrentCall.Locals[l.Index] = emulator.MemoryStack.CurrentFrame.Pop();
         }

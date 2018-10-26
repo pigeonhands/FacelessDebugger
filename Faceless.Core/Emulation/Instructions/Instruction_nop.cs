@@ -10,7 +10,7 @@ namespace Faceless.Core.Emulation.Instructions {
         public Instruction_nop() : base(Code.Nop) {
         }
 
-        public override void Execute(Instruction i, Emulator emulator) {
+        protected override void Handle(Instruction i, Emulator emulator) {
         }
     }
 }

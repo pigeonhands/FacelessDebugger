@@ -9,6 +9,7 @@ using dnlib.DotNet;
 using Faceless.Core.Emulation.Instructions;
 using Faceless.Core.Exceptions;
 using Faceless.Core.Emulation.Objects;
+using Faceless.Core.Debug;
 
 namespace Faceless.Core.Emulation {
     internal class Emulator {
@@ -27,6 +28,8 @@ namespace Faceless.Core.Emulation {
         private AppDomain sandboxDomain;
 
         public Emulator(MethodDef method) {
+            OpCodeDebugger.Instance.AddBrakpoint(Code.Newobj);
+
             CurrentCall = new EmulatedCall(null, method);
             MemoryStack.NewFrame();
 
@@ -65,6 +68,7 @@ namespace Faceless.Core.Emulation {
                 new Instruction_stfld(),
                 new Instruction_ldfld(),
                 new Instruction_ldftn(),
+                new Instruction_ldtoken(),
 
             });
 
@@ -96,7 +100,7 @@ namespace Faceless.Core.Emulation {
                 throw new CantHandleInstructionException($"No handler found for OpCode {ins.OpCode.Name}");
             }
 
-            fi.Execute(ins, this);
+            fi.Process(ins, this);
 
         }
 

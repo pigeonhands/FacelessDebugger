@@ -32,8 +32,16 @@ namespace Faceless.Dummy {
             t.Add(1);
             Console.WriteLine(t.Int1);
             Console.WriteLine(t.string1);
-            
 
+
+            Generic<string>();
+        }
+
+        static object Generic<T>() {
+            if(typeof(T) == typeof(string)) {
+                Console.WriteLine("string.");
+            }
+            return new Random();
         }
         static string Reverse(string s) {
             var sb = new StringBuilder();
